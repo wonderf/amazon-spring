@@ -29,7 +29,7 @@ public class Task {
     )
     private String[] words;
 
-    private int readyPercents;
+    private int percents;
 
 
     @Type(type = "list-array")

@@ -9,9 +9,10 @@ spring:
     hibernate:
       ddl-auto: create
   datasource:
-    platform: org.hibernate.dialect.H2Dialect
-    url: jdbc:h2:mem:devdb
-    username: sa
+    platform: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/store
+    username: pguser
+    password: 123123123
   flyway:
     locations: classpath:/db/migration/{vendor}
 

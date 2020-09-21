@@ -3,6 +3,7 @@ package app.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +22,5 @@ public class TaskResult {
     private String googleUrl;
 
     @OneToMany(mappedBy = "taskResult")
-    private Task task;
+    private List<Task> task;
 }
