@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: server-core
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create
+  datasource:
+    platform: org.hibernate.dialect.H2Dialect
+    url: jdbc:h2:mem:devdb
+    username: sa
+  flyway:
+    locations: classpath:/db/migration/{vendor}
+
+server:
+  port: 9000
+
+logging:
+  level:
+    server: debug
