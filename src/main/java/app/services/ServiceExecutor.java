@@ -28,6 +28,8 @@ public class ServiceExecutor {
         t.setDomain(US);
         t.setWords(form.getWords());
         t.setFiltering(form.getFiltering());
+
+        int total = form.getWords().length *36+(form.isDeep()?1:0 )*form.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*form.getWords().length*DictGenerator.words().length;
         Task save = taskService.save(t);
         lightSearch(save);
         //calculate all works
