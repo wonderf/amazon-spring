@@ -1,11 +1,12 @@
 package app.entity;
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType;
+import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @TypeDef(
         name = "list-array",
-        typeClass = ListArrayType.class
+        typeClass = StringArrayType.class
 )
 public class Task {
     @Id
@@ -29,7 +30,8 @@ public class Task {
     )
     private String[] words;
 
-    private int percents;
+    private int currentWorks;
+    private int totalWorkls;
 
 
     @Type(type = "list-array")
@@ -41,8 +43,7 @@ public class Task {
 
     private String domain;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "task_result_id")
-    private TaskResult taskResult;
+    @OneToMany(cascade = CascadeType.REMOVE,mappedBy ="task" )
+    private List<TaskResult> taskResult;
 
 }

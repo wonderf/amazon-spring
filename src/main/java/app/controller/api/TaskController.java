@@ -2,9 +2,9 @@ package app.controller.api;
 
 import app.entity.Task;
 import app.services.TaskService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import app.utils.DictGenerator;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +19,13 @@ public class TaskController {
 
     @GetMapping
     public List<Task> loadAll(){
+        DictGenerator.dic()
         return taskService.findAll();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Task> createTask(@RequestBody Task t){
+
+        return ResponseEntity.ok().build();
     }
 }

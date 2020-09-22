@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="12" v-for="(item,index) in TASKS" :key="index">
+        <v-col cols="12" v-for="item in TASKS" :key="item.id">
             <div class="text--center">{{item.name}}</div>
             <v-progress-linear
                     v-model="item.percents"

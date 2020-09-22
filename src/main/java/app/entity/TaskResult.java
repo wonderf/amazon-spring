@@ -21,6 +21,7 @@ public class TaskResult {
     private String amazonUrl;
     private String googleUrl;
 
-    @OneToMany(mappedBy = "taskResult")
-    private List<Task> task;
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
 }
