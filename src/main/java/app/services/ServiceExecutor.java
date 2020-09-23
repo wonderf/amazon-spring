@@ -26,10 +26,10 @@ public class ServiceExecutor {
     public void collectAllResults(TaskForm form){
         Task t = new Task();
         t.setDomain(US);
-        t.setWords(form.getWords());
-        t.setFiltering(form.getFiltering());
+        t.setWords(form.getSearch().split(","));
+        t.setFiltering(form.getFiltering().split(","));
 
-        int total = form.getWords().length *36+(form.isDeep()?1:0 )*form.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*form.getWords().length*DictGenerator.words().length;
+        int total = t.getWords().length *36+(form.isDeep()?1:0 )*t.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*t.getWords().length*DictGenerator.words().length;
         Task save = taskService.save(t);
         lightSearch(save);
         //calculate all works

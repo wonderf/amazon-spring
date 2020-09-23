@@ -17,14 +17,13 @@ const actions = {
     LOAD_TASKS: async (context) => {
         let tasks = await Axios.get(`${process.env.VUE_APP_HOST_URL}/api/task`);
         if (tasks.status === 200) {
-            context.commit('SET_TABLE', tasks.data);
+            context.commit('SET_TASKS', tasks.data);
         }
     },
 
-    START_NEW_TASK: async (context,{words,deep,reverse,filtering,zone}) =>{
-        let task = await Axios.post(`${process.env.VUE_APP_HOST_URL}/api/task/create`, {
-            words,deep,reverse,filtering,zone
-        })
+    START_NEW_TASK: async (context,form) =>{
+        console.log(form);
+        let task = await Axios.post(`${process.env.VUE_APP_HOST_URL}/api/task/create`, form)
         if (task.status === 200) {
             context.dispatch('LOAD_TASKS');
         }
