@@ -11,12 +11,18 @@ import java.util.concurrent.Executor;
 @SpringBootApplication
 @EnableAsync
 public class Application {
-    public static void main(String[] args){
-        SpringApplication.run(Application.class,args);
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 
-    @Bean(name = "threadPoolTaskExecutor")
+    @Bean(name = "asyncExecutor")
     public Executor threadPoolTaskExecutor() {
-        return new ThreadPoolTaskExecutor();
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("AsynchThread-");
+        executor.initialize();
+        return executor;
     }
 }

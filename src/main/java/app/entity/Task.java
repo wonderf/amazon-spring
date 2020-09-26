@@ -1,5 +1,6 @@
 package app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -42,8 +43,10 @@ public class Task {
     private String[] filtering;
 
     private String domain;
+    private String amazonResult;
 
     @OneToMany(cascade = CascadeType.REMOVE,mappedBy ="task" )
+    @JsonIgnore
     private List<TaskResult> taskResult;
 
 }

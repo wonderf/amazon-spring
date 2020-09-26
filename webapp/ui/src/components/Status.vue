@@ -1,12 +1,12 @@
 <template>
     <v-row>
         <v-col cols="12" v-for="item in TASKS" :key="item.id">
-            <div class="text--center">{{item.name}}</div>
+            <div class="text--center">{{item.words.slice(0,3).join(" ")}}</div>
             <v-progress-linear
                     v-model="item.percents"
                     height="25"
             >
-                <strong>{{ Math.ceil(item.percents) }}%</strong>
+                <strong>{{ item.percents }}%</strong>
             </v-progress-linear>
         </v-col>
     </v-row>
@@ -18,9 +18,13 @@
     export default {
         name: 'Status',
         methods:{
+            perncents:function (item) {
+                return item.currentWorks/item.totalWorkls;
+            },
             ...mapActions(['LOAD_TASKS'])
         },
         computed:{
+
             ...mapGetters(['TASKS'])
         },
         mounted() {

@@ -1,9 +1,9 @@
 package app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +16,7 @@ public class TaskResult {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
+
     private String name;
 
     private String amazonUrl;
@@ -23,5 +24,6 @@ public class TaskResult {
 
     @ManyToOne
     @JoinColumn(name = "task_id")
+    @JsonIgnore
     private Task task;
 }

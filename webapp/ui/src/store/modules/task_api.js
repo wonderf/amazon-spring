@@ -11,6 +11,9 @@ const getters = {
 const mutations = {
     SET_TASKS: (state, payload) => {
         state.tasks = payload;
+        for(let i=0;i<state.tasks.length;i++){
+            state.tasks[i].percents=Math.ceil(state.tasks[i].currentWorks/state.tasks[i].totalWorkls*100);
+        }
     },
 };
 const actions = {

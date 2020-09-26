@@ -43,4 +43,8 @@ public class TaskService implements BaseCrudService<Task> {
     public void deleteById(Long id) {
         taskRepository.deleteById(id);
     }
+
+    public void incrementCurrentWork(Task task){
+        taskRepository.updateCurrnetWorks(task);
+    }
 }

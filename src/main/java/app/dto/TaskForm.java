@@ -11,8 +11,9 @@ import lombok.Setter;
 @Setter
 public class TaskForm {
     private String search;
-    private String filtering;
+    private String filters="";
     private boolean deep;
     private boolean reverse;
     private String market;
+    private String amazonResult;
 }
