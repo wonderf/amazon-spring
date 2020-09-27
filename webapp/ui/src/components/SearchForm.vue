@@ -69,7 +69,10 @@ export default {
       reverseSearch:false,
       filtering:false,
       filters:'',
-      form:{market:"https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}"},
+      form:{
+        filtering:true,
+        filters:'shirt, gift, appare',
+        market:"https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}"},
     };
   },
   methods: {
