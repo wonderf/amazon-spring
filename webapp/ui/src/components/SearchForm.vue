@@ -10,10 +10,11 @@
               v-model="form.search"
               label="Search"
               required
+
           ></v-text-field>
         </v-col>
         <v-col cols="12">
-          <v-file-input label="File input"></v-file-input>
+          <v-file-input ref="file" label="File input" v-on:change="getCSVFile($event)"></v-file-input>
         </v-col>
         <v-col cols="12">
           <v-row>
@@ -76,6 +77,32 @@ export default {
     };
   },
   methods: {
+    getCSVFile: function(event) {
+      const inp = this.$refs.file;
+      console.log(inp);
+    const input = event.target
+    if ('files' in input && input.files.length > 0) {
+      this.placeFileCSVContent(
+              input.files[0])
+    }
+  },
+
+  placeFileCSVContent: function(file) {
+
+    let vm = this;
+    this.readCSVFileContent(file).then(content => {
+      vm.form.search= content.join(", ");
+    }).catch(error => console.log(error))
+  },
+
+  readCSVFileContent: function(file) {
+    const reader = new FileReader()
+    return new Promise((resolve, reject) => {
+      reader.onload = event => resolve(event.target.result)
+      reader.onerror = error => reject(error)
+      reader.readAsText(file)
+    })
+  },
     startSearch:function () {
       if(this.form.market === "https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}")
         this.form.amazonResult="https://www.amazon.com/s?k={r}&i=fashion-novelty&bbn=12035955011&rh=p_6%3AATVPDKIKX0DER&hidden-keywords=ORCA"

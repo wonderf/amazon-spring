@@ -42,7 +42,8 @@ public class ServiceExecutor {
         Task t = new Task();
         t.setDomain(form.getMarket());
         t.setWords(form.getSearch().split(","));
-        t.setFiltering(form.getFilters().split(","));
+        if(!form.isFiltering()) t.setFiltering("".split(","));
+        else t.setFiltering(form.getFilters().split(","));
         t.setAmazonResult(form.getAmazonResult());
         int total = t.getWords().length *36+(form.isDeep()?1:0 )*t.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*t.getWords().length*DictGenerator.words().length+1;
         t.setTotalWorkls(total);

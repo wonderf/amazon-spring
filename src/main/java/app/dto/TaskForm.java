@@ -12,6 +12,7 @@ import lombok.Setter;
 public class TaskForm {
     private String search;
     private String filters="";
+    private boolean filtering;
     private boolean deep;
     private boolean reverse;
     private String market;
