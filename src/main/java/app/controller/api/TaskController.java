@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -78,7 +77,9 @@ public class TaskController {
             Task task = byId.get();
             if(task.getTotalWorkls()==task.getCurrentWorks()){
                 List<TaskResult> taskResult = task.getTaskResult();
-                List<ByteArrayInputStream> load = excelService.load(taskResult,2000);
+                Set<String> set = new HashSet<>(taskResult.size());
+                List<TaskResult> collect = taskResult.stream().filter(p -> set.add(p.getName())).collect(Collectors.toList());
+                List<ByteArrayInputStream> load = excelService.load(collect,2000);
                 try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
                     for (int i=0;i<load.size();i++) {
                         ZipEntry e = new ZipEntry(task.getWords()[0]+"_"+(i+1)+".xlsx");

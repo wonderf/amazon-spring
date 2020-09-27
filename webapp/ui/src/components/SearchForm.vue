@@ -69,7 +69,7 @@ export default {
       reverseSearch:false,
       filtering:false,
       filters:'',
-      form:{},
+      form:{market:"https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}"},
     };
   },
   methods: {
