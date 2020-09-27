@@ -67,7 +67,6 @@ public class ServiceExecutor {
             String req =t.getDomain().replace("{0}",t.getWords()[i]);
             URL url = new URL(req);
             URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-            url = uri.toURL();
             ResponseEntity<String> forEntity = client.getForEntity(req, String.class);
             JsonNode jsonNode = mapper.readTree(forEntity.getBody());
             ObjectReader reader = mapper.readerFor(new TypeReference<List<String>>() {
