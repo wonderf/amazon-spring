@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: server-core
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: org.postgresql.Driver
+    url: jdbc:postgresql://ec2-54-197-34-207.compute-1.amazonaws.com:5432/d7uh5cfmvj9cg7?password=3474d1d60b7a69b83e711463cd361525d14cf7f666a3a95a1d36a248a93fea4d&sslmode=require&user=cylhumqyxkmvwo
+  flyway:
+    locations: classpath:/db/migration/{vendor}
+
+server:
+  port: 9000
+
+logging:
+  level:
+    server: debug
