@@ -1,5 +1,6 @@
 package app.services;
 
+import app.entity.Task;
 import app.entity.TaskResult;
 import app.repository.TaskResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,19 @@ import java.util.Optional;
 public class TaskResultService implements BaseCrudService<TaskResult> {
     private final TaskResultRepository taskResultRepository;
 
+
     @Autowired
     public TaskResultService(TaskResultRepository taskResultRepository) {
         this.taskResultRepository = taskResultRepository;
     }
-
+    public TaskResult saveFromSearch(Task owner,String name){
+        TaskResult result = new TaskResult();
+        result.setTask(owner);
+        result.setName(name);
+        result.setAmazonUrl(owner.getAmazonResult().replace("{r}",result.getName()));
+        result.setGoogleUrl(String.format("https://www.google.com/search?q=%s",result.getName()));
+        return taskResultRepository.save(result);
+    }
     @Override
     public TaskResult save(TaskResult item) {
         return taskResultRepository.save(item);

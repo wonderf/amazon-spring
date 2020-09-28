@@ -10,7 +10,7 @@ spring:
       ddl-auto: create-drop
   datasource:
     platform: org.postgresql.Driver
-    url: jdbc:postgresql://localhost/store
+    url: jdbc:postgresql://localhost:5432/store
     username: pguser
     password: 123123123
   flyway:

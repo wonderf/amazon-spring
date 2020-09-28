@@ -11,6 +11,9 @@ const getters = {
 const mutations = {
     SET_TASKS: (state, payload) => {
         state.tasks = payload;
+        for(let i=0;i<state.tasks.length;i++){
+            state.tasks[i].percents=Math.ceil(state.tasks[i].currentWorks/state.tasks[i].totalWorkls*100);
+        }
     },
 };
 const actions = {
@@ -21,10 +24,9 @@ const actions = {
         }
     },
 
-    START_NEW_TASK: async (context,{words,deep,reverse,filtering,zone}) =>{
-        let task = await Axios.post(`${process.env.VUE_APP_HOST_URL}/api/task/create`, {
-            words,deep,reverse,filtering,zone
-        })
+    START_NEW_TASK: async (context,form) =>{
+        console.log(form);
+        let task = await Axios.post(`${process.env.VUE_APP_HOST_URL}/api/task/create`, form)
         if (task.status === 200) {
             context.dispatch('LOAD_TASKS');
         }

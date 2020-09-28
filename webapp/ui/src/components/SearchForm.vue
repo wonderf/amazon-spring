@@ -10,10 +10,11 @@
               v-model="form.search"
               label="Search"
               required
+
           ></v-text-field>
         </v-col>
         <v-col cols="12">
-          <v-file-input label="File input"></v-file-input>
+          <v-file-input ref="file" label="File input" v-on:change="getCSVFile($event)"></v-file-input>
         </v-col>
         <v-col cols="12">
           <v-row>
@@ -22,16 +23,16 @@
             </v-col>
             <v-col cols="4" offset="2">
               <v-radio-group v-model="form.market" class="align-content-sm-end" row>
-                <v-radio label="UK" value="UK"></v-radio>
-                <v-radio label="US" value="US"></v-radio>
+                <v-radio label="UK" value="https://completion.amazon.co.uk/search/complete?method=completion&q={0}&search-alias=aps&mkt=4&noCacheIE=1295031912518"></v-radio>
+                <v-radio label="US" value="https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}"></v-radio>
               </v-radio-group>
             </v-col>
           </v-row>
 
         </v-col>
         <v-col cols="12">
-          <v-checkbox v-model="form.deepSearch" label="Deep Search: "></v-checkbox>
-          <v-checkbox v-model="form.reverseSearch" label="Reverse Search: "></v-checkbox>
+          <v-checkbox v-model="form.deep" label="Deep Search"></v-checkbox>
+          <v-checkbox v-model="form.reverse" label="Reverse Search"></v-checkbox>
 
         </v-col>
         <v-col cols="12">
@@ -57,24 +58,55 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from 'vuex';
-const {mapActions} = createNamespacedHelpers('task_api');
-
+  import {createNamespacedHelpers} from 'vuex';
+  const {mapActions} = createNamespacedHelpers('task_api');
 export default {
   name: 'SearchForm',
   data: function () {
     return {
-      form:{},
       search:'',
       market: undefined,
       deepSearch:false,
       reverseSearch:false,
       filtering:false,
       filters:'',
+      form:{
+        filtering:true,
+        filters:'shirt, gift, appare',
+        market:"https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}"},
     };
   },
   methods: {
-    startSearch: function(){
+    getCSVFile: function(event) {
+      const inp = this.$refs.file;
+      console.log(inp);
+    const input = event.target
+    if ('files' in input && input.files.length > 0) {
+      this.placeFileCSVContent(
+              input.files[0])
+    }
+  },
+
+  placeFileCSVContent: function(file) {
+
+    let vm = this;
+    this.readCSVFileContent(file).then(content => {
+      vm.form.search= content.join(", ");
+    }).catch(error => console.log(error))
+  },
+
+  readCSVFileContent: function(file) {
+    const reader = new FileReader()
+    return new Promise((resolve, reject) => {
+      reader.onload = event => resolve(event.target.result)
+      reader.onerror = error => reject(error)
+      reader.readAsText(file)
+    })
+  },
+    startSearch:function () {
+      if(this.form.market === "https://completion.amazon.com/search/complete?search-alias=aps&client=amazon-search-ui&mkt=1&q={0}")
+        this.form.amazonResult="https://www.amazon.com/s?k={r}&i=fashion-novelty&bbn=12035955011&rh=p_6%3AATVPDKIKX0DER&hidden-keywords=ORCA"
+      else this.form.amazonResult="https://www.amazon.co.uk/s?k={r}&hidden-keywords=%22Solid+colors%3A+100%25+Cotton%3B+Heather+Grey%3A+90%25+Cotton%2C+10%25+Polyester%3B+All+Other+Heathers%3A+50%25+Cotton%2C+50%25+Polyester%22"
       this.START_NEW_TASK(this.form);
     },
     ...mapActions(['START_NEW_TASK'])
