@@ -12,11 +12,14 @@
                     </v-progress-linear>
                 </v-col>
                 <v-col cols="3" class="mt-4">
-                    <v-btn @click="downloadWithAxios(`/api/task/downloadZip/${item.id}`)">
-                        <v-icon>
+
+                        <v-icon class = "mt-2" @click="downloadWithAxios(`/api/task/downloadZip/${item.id}`)">
                             mdi-download
                         </v-icon>
-                    </v-btn>
+                        <v-icon class="mt-1" @click="cancelWork(item.id)">
+                          mdi-close
+                        </v-icon>
+
                 </v-col>
             </v-row>
         </v-col>
@@ -41,6 +44,9 @@
                 link.setAttribute('download', 'download.zip') //or any other extension
                 document.body.appendChild(link)
                 link.click()
+            },
+            cancelWork(id){
+              Axios.get(process.env.VUE_APP_HOST_URL+"/api/task/stop/"+id).then(()=>{console.log("stoped")})
             },
             downloadWithAxios(url){
                 Axios({

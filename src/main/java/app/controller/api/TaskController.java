@@ -3,6 +3,7 @@ package app.controller.api;
 import app.dto.TaskForm;
 import app.entity.Task;
 import app.entity.TaskResult;
+import app.services.AsyncTaskManager;
 import app.services.ExcelService;
 import app.services.ServiceExecutor;
 import app.services.TaskService;
@@ -26,11 +27,13 @@ public class TaskController {
     private final TaskService taskService;
     private final ServiceExecutor serviceExecutor;
     private final ExcelService excelService;
+    private final AsyncTaskManager taskManager;
 
-    public TaskController(TaskService taskService, ServiceExecutor serviceExecutor, ExcelService excelService) {
+    public TaskController(TaskService taskService, ServiceExecutor serviceExecutor, ExcelService excelService, AsyncTaskManager taskManager) {
         this.taskService = taskService;
         this.serviceExecutor = serviceExecutor;
         this.excelService = excelService;
+        this.taskManager = taskManager;
     }
 
     @GetMapping
@@ -38,32 +41,24 @@ public class TaskController {
         return taskService.findAll();
     }
 
+    @GetMapping("/stop/{id}")
+    public ResponseEntity<Boolean> stopThread(@PathVariable(name = "id") Long task){
+        Optional<Task> byId = taskService.findById(task);
+        if(byId.isPresent()){
+            Task task1 = byId.get();
+            if(task1.getCurrentWorks()==task1.getTotalWorkls())
+                taskService.deleteById(task);
+            else
+                taskManager.completeTask(task);
+        }
+
+        return ResponseEntity.ok(true);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Task> createTask(@RequestBody TaskForm t){
         serviceExecutor.collectAllResults(t);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/download/{id}")
-    public ResponseEntity<List<InputStreamResource>> downloadSplittedResult(@PathVariable(name = "id") Long taskId){
-        Optional<Task> byId = taskService.findById(taskId);
-        List<InputStreamResource> streams = new ArrayList<>();
-        if(byId.isPresent()){
-            Task task = byId.get();
-            if(task.getTotalWorkls()==task.getCurrentWorks()){
-                List<TaskResult> taskResult = task.getTaskResult();
-                List<ByteArrayInputStream> load = excelService.load(taskResult,2000);
-                for(int i=0;i<load.size();i++){
-                    InputStreamResource file = new InputStreamResource(load.get(i));
-                    streams.add(file);
-                }
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "filename")
-                        .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-                        .body(streams);
-            }
-        }
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/downloadZip/{id}")
@@ -99,10 +94,5 @@ public class TaskController {
 
             }
         }
-
-
-
-
-
     }
 }

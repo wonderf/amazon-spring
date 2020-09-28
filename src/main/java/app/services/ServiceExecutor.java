@@ -29,11 +29,14 @@ public class ServiceExecutor {
     private final String US="";
     private final String UK="";
     private ObjectMapper mapper = new ObjectMapper();
+    private final AsyncTaskManager asyncTaskManager;
+    private volatile boolean isComplete=false;
 
     @Autowired
-    public ServiceExecutor(TaskResultService taskResultService, TaskService taskService) {
+    public ServiceExecutor(TaskResultService taskResultService, TaskService taskService, AsyncTaskManager asyncTaskManager) {
         this.taskResultService = taskResultService;
         this.taskService = taskService;
+        this.asyncTaskManager = asyncTaskManager;
         this.client = new RestTemplate();
     }
 
@@ -48,6 +51,7 @@ public class ServiceExecutor {
         int total = t.getWords().length *36+(form.isDeep()?1:0 )*t.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*t.getWords().length*DictGenerator.words().length+1;
         t.setTotalWorkls(total);
         Task save = taskService.save(t);
+        asyncTaskManager.addTask(this,save.getId());
         try {
             lightSearch(save);
             if(form.isDeep())
@@ -56,12 +60,18 @@ public class ServiceExecutor {
                 reverseSearch(save);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            asyncTaskManager.completeTask(save.getId());
         }
-        //calculate all works
+        asyncTaskManager.completeTask(save.getId());
+    }
+
+    public void complete(){
+        this.isComplete=true;
     }
 
     @Async
-    public void lightSearch(Task t) throws IOException, URISyntaxException {
+    public void lightSearch(Task t) throws IOException, URISyntaxException, InterruptedException {
         //todo without adding
         for(int i=0;i<t.getWords().length;i++){
             taskService.incrementCurrentWork(t);
@@ -97,19 +107,21 @@ public class ServiceExecutor {
                     return false;
                 }).forEach(x->taskResultService.saveFromSearch(t,x));
             }
-            try {
+
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
         }
 
     }
 
     @Async
-    public void deepSearch(Task t) throws IOException, URISyntaxException {
+    public void deepSearch(Task t) throws IOException, URISyntaxException, InterruptedException {
         for(int i=0;i<t.getWords().length;i++){
             for(int j=0;j< DictGenerator.words().length;j++){
+                if(this.isComplete){
+                    completeTask(t);
+                    return;
+                }
                 taskService.incrementCurrentWork(t);
                 log.info(t.getWords()[i]+" "+DictGenerator.words()[j]);
                 String req =t.getDomain().replace("{0}",t.getWords()[i]+" "+DictGenerator.words()[j]);
@@ -127,25 +139,25 @@ public class ServiceExecutor {
                     return false;
                 }).forEach(x->taskResultService.saveFromSearch(t,x));
                 if(j%36==0){
-                    try {
+
                         Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
-            try {
+
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
         }
     }
 
     @Async
-    public void reverseSearch(Task t) throws IOException, URISyntaxException {
+    public void reverseSearch(Task t) throws IOException, URISyntaxException, InterruptedException {
         for(int i=0;i<t.getWords().length;i++){
             for(int j=0;j< DictGenerator.words().length;j++){
+                if(this.isComplete){
+                    completeTask(t);
+                    return;
+                }
                 taskService.incrementCurrentWork(t);
                 log.info(DictGenerator.words()[j] + " " +t.getWords()[i]);
                 String req =t.getDomain().replace("{0}",DictGenerator.words()[j]+" "+t.getWords()[i]);
@@ -162,19 +174,19 @@ public class ServiceExecutor {
                     return false;
                 }).forEach(x->taskResultService.saveFromSearch(t,x));
                 if(j%36==0){
-                    try {
+
                         Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
-            try {
+
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
         }
+    }
+
+    private void completeTask(Task t){
+        taskService.deleteById(t.getId());
     }
 
 }
