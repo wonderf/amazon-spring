@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskForm {
-    private String[] words;
-    private String[] filtering;
-    private boolean deep;
-    private boolean reverse;
+    private String search;
+    private String filtering;
+    private boolean deepSearch;
+    private boolean reverseSearch;
     private String market;
 }

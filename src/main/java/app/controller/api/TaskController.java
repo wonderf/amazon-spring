@@ -1,5 +1,6 @@
 package app.controller.api;
 
+import app.dto.TaskForm;
 import app.entity.Task;
 import app.services.TaskService;
 import app.utils.DictGenerator;
@@ -19,12 +20,11 @@ public class TaskController {
 
     @GetMapping
     public List<Task> loadAll(){
-        DictGenerator.dic()
         return taskService.findAll();
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Task> createTask(@RequestBody Task t){
+    @PostMapping(value="/create",consumes = "application/json",produces = "application/json")
+    public ResponseEntity<Task> createTask(@RequestBody TaskForm t){
 
         return ResponseEntity.ok().build();
     }

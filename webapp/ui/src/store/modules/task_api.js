@@ -17,7 +17,7 @@ const actions = {
     LOAD_TASKS: async (context) => {
         let tasks = await Axios.get(`${process.env.VUE_APP_HOST_URL}/api/task`);
         if (tasks.status === 200) {
-            context.commit('SET_TABLE', tasks.data);
+            context.commit('SET_TASKS', tasks.data);
         }
     },
 

@@ -7,7 +7,7 @@
             md="12"
         >
           <v-text-field
-              v-model="search"
+              v-model="form.search"
               label="Search"
               required
           ></v-text-field>
@@ -21,7 +21,7 @@
               <div class="d-flex align-center">Market</div>
             </v-col>
             <v-col cols="4" offset="2">
-              <v-radio-group v-model="market" class="align-content-sm-end" row>
+              <v-radio-group v-model="form.market" class="align-content-sm-end" row>
                 <v-radio label="UK" value="UK"></v-radio>
                 <v-radio label="US" value="US"></v-radio>
               </v-radio-group>
@@ -30,18 +30,18 @@
 
         </v-col>
         <v-col cols="12">
-          <v-checkbox v-model="deepSearch" :label="`Deep Search: ${deepSearch.toString()}`"></v-checkbox>
-          <v-checkbox v-model="reverseSearch" :label="`Reverse Search: ${reverseSearch.toString()}`"></v-checkbox>
+          <v-checkbox v-model="form.deepSearch" label="Deep Search: "></v-checkbox>
+          <v-checkbox v-model="form.reverseSearch" label="Reverse Search: "></v-checkbox>
 
         </v-col>
         <v-col cols="12">
           <v-row>
             <v-col cols="4">
-              <v-checkbox v-model="filtering" :label="`Filtering: ${filtering.toString()}`"></v-checkbox>
+              <v-checkbox v-model="form.filtering" label="Filtering"></v-checkbox>
             </v-col>
             <v-col cols="8">
               <v-text-field
-                  v-model="filters"
+                  v-model="form.filters"
                   label="Filters"
                   required
               ></v-text-field>
@@ -51,17 +51,20 @@
       </v-row>
     </v-container>
     <div class="my-2">
-      <v-btn >Search</v-btn>
+      <v-btn @click="startSearch">Search</v-btn>
     </div>
   </v-form>
 </template>
 
 <script>
+import {createNamespacedHelpers} from 'vuex';
+const {mapActions} = createNamespacedHelpers('task_api');
 
 export default {
   name: 'SearchForm',
   data: function () {
     return {
+      form:{},
       search:'',
       market: undefined,
       deepSearch:false,
@@ -70,7 +73,12 @@ export default {
       filters:'',
     };
   },
-  methods: {},
+  methods: {
+    startSearch: function(){
+      this.START_NEW_TASK(this.form);
+    },
+    ...mapActions(['START_NEW_TASK'])
+  },
   computed: {},
   mounted() {
 
