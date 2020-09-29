@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +22,12 @@ public class TaskResultService implements BaseCrudService<TaskResult> {
     public TaskResultService(TaskResultRepository taskResultRepository) {
         this.taskResultRepository = taskResultRepository;
     }
-    public TaskResult saveFromSearch(Task owner,String name){
+    public TaskResult saveFromSearch(Task owner,String name) throws UnsupportedEncodingException {
         TaskResult result = new TaskResult();
         result.setTask(owner);
         result.setName(name);
-        result.setAmazonUrl(owner.getAmazonResult().replace("{r}",result.getName()));
-        result.setGoogleUrl(String.format("https://www.google.com/search?q=%s",result.getName()));
+        result.setAmazonUrl( URLEncoder.encode(owner.getAmazonResult().replace("{r}",result.getName()), "UTF-8"));
+        result.setGoogleUrl(URLEncoder.encode(String.format("https://www.google.com/search?q=%s",result.getName()),"UTF-8"));
         return taskResultRepository.save(result);
     }
     @Override

@@ -33,15 +33,15 @@ public class ExcelHelper {
                 Row row = sheet.createRow(rowIdx++);
                 Hyperlink amazon = workbook.getCreationHelper().createHyperlink(HyperlinkType.URL);
                 Hyperlink google = workbook.getCreationHelper().createHyperlink(HyperlinkType.URL);
-                amazon.setAddress(taskResult.getAmazonUrl().replace(" ","%20"));
+                amazon.setAddress(taskResult.getAmazonUrl());
                 amazon.setLabel("amazon search");
                 row.createCell(0).setCellValue(taskResult.getName());
                 row.createCell(1).setHyperlink(amazon);
-                row.createCell(1).setCellValue("amazon");
-                google.setAddress(taskResult.getGoogleUrl().replace(" ","%20"));
+                row.createCell(1).setCellValue("amazon link");
+                google.setAddress(taskResult.getGoogleUrl());
                 google.setLabel("google search");
                 row.createCell(2).setHyperlink(google);
-                row.createCell(2).setCellValue("google");
+                row.createCell(2).setCellValue("google link");
             }
 
             workbook.write(out);

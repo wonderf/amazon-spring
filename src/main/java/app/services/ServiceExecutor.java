@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -88,7 +89,13 @@ public class ServiceExecutor {
                     if(x.contains(t.getFiltering()[ii])) return true;
                 }
                 return false;
-            }).forEach(x->taskResultService.saveFromSearch(t,x));
+            }).forEach(x-> {
+                try {
+                    taskResultService.saveFromSearch(t,x);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            });
             for(int j=0;j< DictGenerator.dic().length;j++){
                 taskService.incrementCurrentWork(t);
                 log.info(t.getWords()[i]+" "+DictGenerator.dic()[j]);
@@ -105,7 +112,13 @@ public class ServiceExecutor {
                         if(x.contains(t.getFiltering()[ii])) return true;
                     }
                     return false;
-                }).forEach(x->taskResultService.saveFromSearch(t,x));
+                }).forEach(x-> {
+                    try {
+                        taskResultService.saveFromSearch(t,x);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
 
                 Thread.sleep(5000);
@@ -137,7 +150,13 @@ public class ServiceExecutor {
                         if(x.contains(t.getFiltering()[ii])) return true;
                     }
                     return false;
-                }).forEach(x->taskResultService.saveFromSearch(t,x));
+                }).forEach(x-> {
+                    try {
+                        taskResultService.saveFromSearch(t,x);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                });
                 if(j%36==0){
 
                         Thread.sleep(5000);
@@ -172,7 +191,13 @@ public class ServiceExecutor {
                         if(x.contains(t.getFiltering()[ii])) return true;
                     }
                     return false;
-                }).forEach(x->taskResultService.saveFromSearch(t,x));
+                }).forEach(x-> {
+                    try {
+                        taskResultService.saveFromSearch(t,x);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                });
                 if(j%36==0){
 
                         Thread.sleep(5000);
