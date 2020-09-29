@@ -37,9 +37,11 @@ public class ExcelHelper {
                 amazon.setLabel("amazon search");
                 row.createCell(0).setCellValue(taskResult.getName());
                 row.createCell(1).setHyperlink(amazon);
+                row.createCell(1).setCellValue("amazon");
                 google.setAddress(taskResult.getGoogleUrl().replace(" ","%20"));
                 google.setLabel("google search");
                 row.createCell(2).setHyperlink(google);
+                row.createCell(2).setCellValue("google");
             }
 
             workbook.write(out);

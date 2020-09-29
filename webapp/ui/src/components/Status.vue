@@ -16,7 +16,7 @@
                         <v-icon class = "mt-2" @click="downloadWithAxios(`/api/task/downloadZip/${item.id}`)">
                             mdi-download
                         </v-icon>
-                        <v-icon class="mt-1" @click="cancelWork(item.id)">
+                        <v-icon v-if="item.percents===100" class="mt-1" @click="cancelWork(item.id)">
                           mdi-close
                         </v-icon>
 
