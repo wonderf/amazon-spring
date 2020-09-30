@@ -49,8 +49,9 @@ public class ServiceExecutor {
         if(!form.isFiltering()) t.setFiltering("".split(","));
         else t.setFiltering(form.getFilters().split(","));
         t.setAmazonResult(form.getAmazonResult());
-        int total = t.getWords().length *36+(form.isDeep()?1:0 )*t.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*t.getWords().length*DictGenerator.words().length+1;
+        int total = t.getWords().length *36+(form.isDeep()?1:0 )*t.getWords().length*DictGenerator.words().length+(form.isReverse()?1:0)*t.getWords().length*DictGenerator.words().length;
         t.setTotalWorkls(total);
+        t.setCurrentWorks(0);
         Task save = taskService.save(t);
         asyncTaskManager.addTask(this,save.getId());
         try {
@@ -75,7 +76,7 @@ public class ServiceExecutor {
     public void lightSearch(Task t) throws IOException, URISyntaxException, InterruptedException {
         //todo without adding
         for(int i=0;i<t.getWords().length;i++){
-            taskService.incrementCurrentWork(t);
+            //taskService.incrementCurrentWork(t);
             String req =t.getDomain().replace("{0}",t.getWords()[i]);
             URL url = new URL(req);
             URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());

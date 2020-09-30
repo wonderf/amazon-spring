@@ -14,7 +14,7 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12">
-          <v-file-input ref="file" label="File input" v-on:change="getCSVFile($event)"></v-file-input>
+          <v-file-input id="csv" ref="file" label="File input"></v-file-input>
         </v-col>
         <v-col cols="12">
           <v-row>
@@ -78,8 +78,6 @@ export default {
   },
   methods: {
     getCSVFile: function(event) {
-      const inp = this.$refs.file;
-      console.log(inp);
     const input = event.target
     if ('files' in input && input.files.length > 0) {
       this.placeFileCSVContent(
@@ -91,7 +89,8 @@ export default {
 
     let vm = this;
     this.readCSVFileContent(file).then(content => {
-      vm.form.search= content.join(", ");
+      console.log(content);
+      vm.form.search= content.split('\r\n').join(",");
     }).catch(error => console.log(error))
   },
 
@@ -113,7 +112,8 @@ export default {
   },
   computed: {},
   mounted() {
-
+    document.getElementById('csv')
+            .addEventListener('change', this.getCSVFile)
   }
 }
 </script>
